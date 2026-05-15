@@ -1,0 +1,143 @@
+import React, { useState } from 'react';
+import {
+  Avatar,
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  CssBaseline,
+  Grid,
+  Link,
+  TextField,
+  ThemeProvider,
+  Typography,
+  createTheme
+} from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { useNavigate } from 'react-router-dom';
+
+const defaultTheme = createTheme();
+
+const Login = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleInputChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    console.log(formData);
+    setLoading(false);
+  };
+
+  return (
+    <>
+      <ThemeProvider theme={defaultTheme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 1 }}
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={formData.email}
+                onChange={handleInputChange}
+              />
+
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                disabled={!formData.email || !formData.password}
+              >
+                {loading ? (
+                  <CircularProgress color="success" size={24} />
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+
+              <Grid container>
+                <Grid item>
+                  <Link
+                    variant="body2"
+                    onClick={() => navigate('/register')}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        </Container>
+      </ThemeProvider>
+
+      <Backdrop
+        sx={{
+          color: '#fff',
+          zIndex: (theme) => theme.zIndex.drawer + 1
+        }}
+        open={loading}
+      >
+        <CircularProgress color="success" />
+      </Backdrop>
+    </>
+  );
+};
+
+export default Login;
